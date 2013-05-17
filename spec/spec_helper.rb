@@ -37,7 +37,7 @@ end
 
 shared_context "mock Rails" do
   before(:each) do
-    rails_version = Gem.loaded_specs['rails'].version.to_s
+    rails_version =  Gem.loaded_specs['rails'].version.to_s
 
     # mock rails to keep specs FAST!
     unless defined? Rails

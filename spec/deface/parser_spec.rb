@@ -1,5 +1,5 @@
 # encoding: UTF-8
- 
+
 require 'spec_helper'
 
 module Deface
@@ -112,13 +112,13 @@ module Deface
       end
 
       it "should convert multiple <% ... %> inside html tag" do
-        tag = Deface::Parser.convert(%q{<p <%= method_name %> alt="<% x = 'y' + 
+        tag = Deface::Parser.convert(%q{<p <%= method_name %> alt="<% x = 'y' +
                                \"2\" %>" title='<% method_name %>' <%= other_method %></p>})
 
         tag = tag.css('p').first
         tag.attributes['data-erb-0'].value.should == "<%= method_name %>"
         tag.attributes['data-erb-1'].value.should == "<%= other_method %>"
-        tag.attributes['data-erb-alt'].value.should == "<% x = 'y' + \n                               \\\"2\\\" %>"
+        tag.attributes['data-erb-alt'].value.should == "<% x = 'y' +\n                               \\\"2\\\" %>"
         tag.attributes['data-erb-title'].value.should == "<% method_name %>"
       end
 
@@ -149,24 +149,22 @@ module Deface
         tag.text.should eq " method_name( :key => 'value' ) "
       end
 
-      if "".encoding_aware?
-        it "should respect valid encoding tag" do
-          source = %q{<%# encoding: ISO-8859-1 %>Can you say ümlaut?}
-          Deface::Parser.convert(source)
-          source.encoding.name.should == 'ISO-8859-1'
-        end
+      it "should respect valid encoding tag" do
+        source = %q{<%# encoding: ISO-8859-1 %>Can you say ümlaut?}
+        Deface::Parser.convert(source)
+        source.encoding.name.should == 'ISO-8859-1'
+      end
 
-        it "should force default encoding" do
-          source = %q{Can you say ümlaut?}
-          source.force_encoding('ISO-8859-1')
-          Deface::Parser.convert(source)
-          source.encoding.should == Encoding.default_external
-        end
+      it "should force default encoding" do
+        source = %q{Can you say ümlaut?}
+        source.force_encoding('ISO-8859-1')
+        Deface::Parser.convert(source)
+        source.encoding.should == Encoding.default_external
+      end
 
-        it "should force default encoding" do
-          source = %q{<%# encoding: US-ASCII %>Can you say ümlaut?}
-          lambda { Deface::Parser.convert(source) }.should raise_error(ActionView::WrongEncodingError)
-        end
+      it "should force default encoding" do
+        source = %q{<%# encoding: US-ASCII %>Can you say ümlaut?}
+        lambda { Deface::Parser.convert(source) }.should raise_error(ActionView::WrongEncodingError)
       end
 
     end

@@ -56,7 +56,7 @@ module Deface
       Deface::DSL::Loader.register
 
       # check all railties / engines / extensions / application for overrides
-      app.railties.all.dup.push(app).each do |railtie|
+      app.railties.dup.to_a.push(app).each do |railtie|
         next unless railtie.respond_to? :root
         load_overrides(railtie)
       end
